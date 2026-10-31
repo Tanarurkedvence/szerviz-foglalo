@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/*.db
+web/node_modules/
+web/dist/
+.git/
+.github/
+.vs/
+tests/

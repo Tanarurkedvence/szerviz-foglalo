@@ -1,0 +1,23 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+*.db
+*.db-shm
+*.db-wal
+
+# Node / Vite
+node_modules/
+web/dist/
+# built React app copied into the API by "npm run build:api"
+src/ServiceBooking.Api/wwwroot/
+web/coverage/
+
+# Editors / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

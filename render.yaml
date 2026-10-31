@@ -1,0 +1,12 @@
+# Render "Blueprint": lets Render create the web service from this file.
+# Free instances sleep after 15 minutes without traffic; the first request then takes ~1 minute.
+services:
+  - type: web
+    name: szerviz-foglalo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/services
+    envVars:
+      - key: AdminKey
+        generateValue: true
