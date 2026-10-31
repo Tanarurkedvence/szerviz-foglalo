@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Usage: pass this file to "dotnet test" with the settings option (see README). -->
+<RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <!-- Where the app runs. Override for another environment, e.g. the deployed demo. -->
+      <E2E_BASE_URL>http://localhost:5080</E2E_BASE_URL>
+      <E2E_ADMIN_KEY>dev-admin-key</E2E_ADMIN_KEY>
+    </EnvironmentVariables>
+  </RunConfiguration>
+  <Playwright>
+    <BrowserName>chromium</BrowserName>
+    <ExpectTimeout>10000</ExpectTimeout>
+    <LaunchOptions>
+      <!-- Set to false to watch the browser while the tests run. -->
+      <Headless>true</Headless>
+    </LaunchOptions>
+  </Playwright>
+</RunSettings>

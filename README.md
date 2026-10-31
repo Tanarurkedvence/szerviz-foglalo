@@ -65,9 +65,9 @@ Staff endpoints need the `X-Admin-Key` header. Interactive docs: `/swagger`.
 | Unit | xUnit | 43 | Plate rules; booking, lift assignment, time rules (with boundary values), cancellation, status transitions |
 | Integration | xUnit + `WebApplicationFactory` | 11 | Real HTTP requests through the whole app with an in-memory database: status codes, JSON, admin key |
 | Frontend | Vitest + Testing Library | 29 | Formatting helpers, time slot picker, booking form flow with a mocked API |
-| End-to-end | Playwright (.NET), Postman | 30+ | In the separate **[szerviz-foglalo-e2e](https://github.com/Tanarurkedvence/szerviz-foglalo-e2e)** repo, with test plan and bug reports |
+| End-to-end and API | Playwright (.NET), NUnit, Postman | 22 | Real user flows in a browser and the API contract, against the running app: **[tests/e2e](tests/e2e)**, with test plan and bug reports |
 
-GitHub Actions builds and tests the API and the frontend on every push.
+GitHub Actions builds and tests the API and the frontend on every push, then starts the whole app and runs the end-to-end tests against it.
 
 ## Running it locally
 
@@ -91,6 +91,8 @@ dotnet test                 # API unit + integration tests (from the repo root)
 cd web && npm test          # frontend tests
 ```
 
+The end-to-end tests need the app running; see [tests/e2e/README.md](tests/e2e/README.md).
+
 **Everything on one port (like production):** `cd web && npm run build:api` builds the React app into the API's
 `wwwroot`; then `dotnet run` serves both on http://localhost:5080. The E2E tests use this setup.
 
@@ -110,6 +112,6 @@ The demo uses SQLite in the container, so data resets on every restart; a real d
 ## What I would do next
 
 - EF Core migrations instead of `EnsureCreated`, and PostgreSQL for persistent data
-- Fix the booking race condition (two requests for the last free lift at the same moment), see BUG-002 in the e2e repo
+- Fix the booking race condition (two requests for the last free lift at the same moment), see BUG-002 in the [bug reports](tests/e2e/docs/BUG_REPORTS.md)
 - Real staff accounts (ASP.NET Core Identity / JWT) instead of a shared admin key
 - E-mail confirmation and reminder the day before

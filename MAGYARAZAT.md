@@ -79,7 +79,7 @@ foglalt. 422: a kérés formailag jó, de az adott állapotban nem végrehajthat
 
 **„Mi történik, ha két ember egyszerre foglalja le az utolsó szabad helyet?”** Jó kérdés, és ismerem a választ:
 mindkét kérés láthatja szabadnak a helyet, mielőtt bármelyik elmentené. Ez egy versenyhelyzet (race condition). Le is
-írtam hibajegyként (BUG-002 az e2e repóban). Javítani tranzakcióval vagy zárolással lehet. Ha ezt magadtól elmondod, az
+írtam hibajegyként (BUG-002 a `tests/e2e/docs/BUG_REPORTS.md` fájlban). Javítani tranzakcióval vagy zárolással lehet. Ha ezt magadtól elmondod, az
 nagyon jó benyomást kelt.
 
 **„Miért SQLite?”** Egy demóhoz nem kell külön adatbázis-szerver. Az EF Core miatt PostgreSQL-re vagy SQL Serverre

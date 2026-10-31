@@ -50,3 +50,68 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+
+  e2e:
+    name: End-to-end and API tests (Playwright)
+    runs-on: ubuntu-latest
+    env:
+      E2E_BASE_URL: http://localhost:5080
+      E2E_ADMIN_KEY: ci-admin-key
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Build the React app into the API
+        working-directory: web
+        run: |
+          npm ci
+          npm run build:api
+
+      - name: Start the app
+        working-directory: src/ServiceBooking.Api
+        env:
+          PORT: "5080"
+          AdminKey: ci-admin-key
+        run: |
+          dotnet build -c Release
+          nohup dotnet run -c Release --no-build --no-launch-profile > "$RUNNER_TEMP/api.log" 2>&1 &
+
+      - name: Build the tests
+        run: dotnet build tests/e2e/ServiceBooking.E2E/ServiceBooking.E2E.csproj
+
+      - name: Install the browser
+        run: pwsh tests/e2e/ServiceBooking.E2E/bin/Debug/net10.0/playwright.ps1 install --with-deps chromium
+
+      - name: Wait for the app
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf "$E2E_BASE_URL/api/services" > /dev/null; then echo "App is up"; exit 0; fi
+            echo "Waiting for the app... ($i)"; sleep 5
+          done
+          echo "The app did not start"; cat "$RUNNER_TEMP/api.log"; exit 1
+
+      - name: Run the tests
+        run: >
+          dotnet test tests/e2e/ServiceBooking.E2E/ServiceBooking.E2E.csproj --no-build
+          --logger "trx;LogFileName=e2e.trx"
+          -- Playwright.BrowserName=chromium
+
+      - name: Show the app log
+        if: failure()
+        run: cat "$RUNNER_TEMP/api.log" || true
+
+      - name: Upload traces of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: tests/e2e/ServiceBooking.E2E/bin/Debug/net10.0/playwright-traces/

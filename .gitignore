@@ -21,3 +21,6 @@ web/coverage/
 !.vscode/extensions.json
 .DS_Store
 Thumbs.db
+
+# Playwright traces of failed E2E tests
+playwright-traces/
